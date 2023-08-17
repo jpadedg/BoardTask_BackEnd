@@ -1,20 +1,20 @@
-name: Pipeline de produção
-env: 
-    NODE_ENV: production
-    VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-    VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  name: Pipeline de produção
+  env: 
+      NODE_ENV: production
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-on:
-    push:
-      branches:
-        - main
+  on:
+      push:
+        branches:
+          - main
 
-jobs:
+  jobs:
 
-    job1:
-        name: CI - Build e criação do artefato
-        runs-on: ubuntu-latest
-        steps:
+      job1:
+          name: CI - Build e criação do artefato
+          runs-on: ubuntu-latest
+          steps:
             - name: Pegar código do Repositório
               uses: actions/checkout@v3 
 
@@ -39,9 +39,9 @@ jobs:
                 name: artefato
                 retention-days: 1
                 path: ./
-            
+              
 
-    job2:
+      job2:
         name: CD - Deploy na Vercel
         needs: job1
         runs-on: ubuntu-latest
