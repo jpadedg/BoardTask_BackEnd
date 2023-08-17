@@ -16,7 +16,7 @@
           runs-on: ubuntu-latest
           steps:
             - name: Pegar código do Repositório
-              uses: actions/checkout@v3 
+              uses: actions/checkout@v3
 
             - name: Instalando pacotes do npm
               uses: npm install
@@ -34,7 +34,7 @@
               run: ls
 
             - name: Criando artefato ZIP do código buildado
-              uses: actions/upload-artifact@v3 
+              uses: actions/upload-artifact@v3
               with:
                 name: artefato
                 retention-days: 1
