@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const tratarErrosEsperados = require('../functions/tratarErrosEsperados.js')
 
+
 async function conectarBancoDados(req= null, res = null, next= null) {
     try{
-        await mongoose.connect(process.env.MONGODB_URI, { userNewUrlParser: true, useUnifiedTopology: true });
+        await mongoose.connect(process.env.MONGODB_URI, {  useUnifiedTopology: true });
         console.log('Conectado ao banco de dados!!');
         try{ next() ; } catch { };
         return mongoose;

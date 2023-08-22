@@ -25,3 +25,5 @@ function tratarErroEsperado(res , err) {
         });
     }
 }
+
+module.exports = tratarErroEsperado;
