@@ -1,7 +1,8 @@
 const express = require('express');
 const conectarBancoDados = require('../middlewares/conectarBD');
 const router = express.Router();
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const tratarErrosEsperados = require('../functions/tratarErrosEsperados');
 const EsquemaUsuario = require('../models/usuario');
 
@@ -23,6 +24,44 @@ router.post('/criar', conectarBancoDados, async function(req, res) {
     if(String(error).includes("email_1 dup key")){
       return tratarErrosEsperados(res, "Error: Já existe uma conta com esse e-mail!")
     }
+    return tratarErrosEsperados(res, error);
+  }
+});
+
+router.post('/logar', conectarBancoDados, async function(req, res) {
+  try { 
+    // #swagger.tag = ['Usuario']
+    let {email, senha} = req.body;
+    
+    let respostaBD = await EsquemaUsuario.findOne({ email }).select('+senha');
+    if(respostaBD) {
+
+      let senhaCorreta = await bcrypt.compare(senha, respostaBD.senha);
+      if(senhaCorreta) {
+
+        let token = jwt.sign({ id: respostaBD._id }, process.env.JWT_SECRET, { expiresIn: '1d' })
+
+        res.header('x-auth-token', token);
+        res.status(200).json({
+          status: "OK",
+          statusMensagem: "Usuário autenticado com sucesso!!",
+          resposta: { "x-auth-token": token }
+        });
+      } else {
+        throw new Error("Email ou senha incorreta");
+      }
+
+    } else {
+      throw new Error("Email ou senha incorreta");
+    }
+
+    res.status(200).json({
+      status: "OK",
+      statusMensagem: "Usuário criado com sucesso!!",
+      resposta: respostaBD
+    })
+
+  } catch (error) {
     return tratarErrosEsperados(res, error);
   }
 });
