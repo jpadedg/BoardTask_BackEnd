@@ -7,7 +7,7 @@ const authUser = require('../middlewares/authUser');
 
 router.post('/criar', authUser, conectarBancoDados, async function(req, res) {
   try { 
-    // #swagger.tag = ['Tarefa']
+    // #swagger.tags = ['Tarefa']
     let {posicao, titulo, descricao, status, dataEntrega} = req.body;
   
     const usuarioCriador = req.usuarioJwt.id;
@@ -27,6 +27,7 @@ router.post('/criar', authUser, conectarBancoDados, async function(req, res) {
 
 router.put('/editar/:id', authUser, conectarBancoDados, async function(req, res) {
   try { 
+    // #swagger.tags = ['Tarefa']
     let idTarefa = req.params.id;
     let {posicao, titulo, descricao, status, dataEntrega} = req.body;
   
@@ -46,6 +47,26 @@ router.put('/editar/:id', authUser, conectarBancoDados, async function(req, res)
         resposta: dadosTarefa
       }) 
     }
+  } catch (error) {
+    return tratarErrosEsperados(res, error);
+  }
+});
+
+
+router.get('/obter/usuarios', authUser, conectarBancoDados, async function(req, res) {
+  try { 
+    // #swagger.tags = ['Tarefa']
+    // #swagger.description = "Endpoint para obter todas as tarefas do usuario LOGADO"
+
+    const usuarioLogado = req.usuarioJwt.id;
+    const respostaBD = await EsquemaTarefa.find({ usuarioCriador: usuarioLogado}).populate('usuarioCriador');
+
+    res.status(200).json({
+      status: "OK",
+      statusMensagem: "Tarefas listadas na resposta com sucesso!",
+      resposta: respostaBD
+    })
+
   } catch (error) {
     return tratarErrosEsperados(res, error);
   }

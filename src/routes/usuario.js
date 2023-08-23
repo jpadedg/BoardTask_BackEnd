@@ -8,7 +8,7 @@ const EsquemaUsuario = require('../models/usuario');
 
 router.post('/criar', conectarBancoDados, async function(req, res) {
   try { 
-    // #swagger.tag = ['Usuario']
+    // #swagger.tags = ['Usuario']
     let {nome, email, senha} = req.body;
     const numeroVezesHash = 10;
     const senhaHash = await bcrypt.hash(senha, numeroVezesHash);
@@ -30,7 +30,7 @@ router.post('/criar', conectarBancoDados, async function(req, res) {
 
 router.post('/logar', conectarBancoDados, async function(req, res) {
   try { 
-    // #swagger.tag = ['Usuario']
+    // #swagger.tags = ['Usuario']
     let {email, senha} = req.body;
     
     let respostaBD = await EsquemaUsuario.findOne({ email }).select('+senha');
